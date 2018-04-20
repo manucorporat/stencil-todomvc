@@ -1,0 +1,18 @@
+{
+  "namespace": "todo",
+  "fsNamespace": "todo",
+  "loader": "../todo.js",
+  "core": "todo.1vs4wwsg.js",
+  "corePolyfilled": "todo.7dvsugtq.js",
+  "components": {
+    "todo-app": {
+      "$": "wnrsyqgf"
+    },
+    "todo-footer": {
+      "$": "wnrsyqgf"
+    },
+    "todo-list": {
+      "$": "wnrsyqgf"
+    }
+  }
+}
