@@ -7,16 +7,15 @@ import { Todo, TodoFilter } from '../../todo';
 export class TodoFooter {
 
 	@Prop() todos: Todo[];
-
 	@Prop() filter: TodoFilter;
 
-	@Event() clearCompleted: EventEmitter;
+	@Event() clearCompleted: EventEmitter<void>;
 
 	render() {
 		let clearCompletedButton = null;
 		if (this.todos.some(item => item.completed)) {
 			clearCompletedButton = (
-				<button class="clear-completed" onClick={(ev) => this.clearCompleted.emit()}>Clear completed</button>
+				<button class="clear-completed" onClick={() => this.clearCompleted.emit()}>Clear completed</button>
 			);
 		}
 

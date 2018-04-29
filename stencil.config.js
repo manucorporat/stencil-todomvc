@@ -6,7 +6,6 @@ exports.config = {
 	outputTargets: [
 		{
 			type: 'www',
-			baseUrl: '/stencil-todomvc'
 		}
 	]
 };

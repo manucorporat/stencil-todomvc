@@ -8,67 +8,26 @@ const ESCAPE_KEY = 27;
 	tag: 'todo-list',
 })
 export class TodoList {
-	@Prop() todos: Todo[];
 
+	@Prop() todos: Todo[];
 	@State() editing: string | null;
 
 	@Event() todoDeleted: EventEmitter;
-
 	@Event() toggleCompleted: EventEmitter;
-
 	@Event() editTitle: EventEmitter;
-
 	@Event() toggleAll: EventEmitter;
 
 	@Element() el: HTMLElement;
 
-	render() {
-		return this.todos.length <= 0 ? null : (
-			<section class="main">
-				<input id="toggle-all" class="toggle-all" type="checkbox"
-					onClick={ev => this.onToggleAll()} checked={this.allCompleted()} />
-				<label htmlFor="toggle-all">Mark all as complete</label>
-				<ul class="todo-list">
-					{this.todos.map(todo => this.renderTodo(todo))}
-				</ul>
-			</section>
-		);
-	}
-
-	renderTodo(todo: Todo) {
-		return (
-			<li class={{ completed: todo.completed, editing: todo.id === this.editing }}>
-				<div class="view">
-					<input class="toggle" type="checkbox" checked={todo.completed}
-						onChange={event => this.toggle(todo)} />
-					<label onDblClick={event => this.edit(todo, event)}>{todo.title}</label>
-					<button class="destroy" onClick={event => this.deleteTodo(todo)}></button>
-				</div>
-				<input class="edit"
-					onBlur={ev => this.doneEdit(todo, ev)}
-					onKeyUp={ev => this.onKeyUp(todo, ev)}
-					value={todo.title} />
-			</li>
-		);
-	}
-
 	private allCompleted() {
-		return this.todos.filter(item => !item.completed).length === 0;
-	}
-
-	private toggle(todo: Todo) {
-		this.toggleCompleted.emit(todo);
+		return this.todos.every(item => item.completed);
 	}
 
 	private deleteTodo(todo: Todo) {
 		this.todoDeleted.emit(todo);
 	}
 
-	private onToggleAll() {
-		this.toggleAll.emit(!this.allCompleted());
-	}
-
-	private edit(todo: Todo, event: MouseEvent) {
+	private edit(todo: Todo) {
 		this.editing = todo.id;
 
 		setTimeout(() => {
@@ -98,4 +57,39 @@ export class TodoList {
 		}
 	}
 
+	private renderTodo(todo: Todo) {
+		return (
+			<li class={{ completed: todo.completed, editing: todo.id === this.editing }}>
+				<div class="view">
+					<input
+						class="toggle"
+						type="checkbox"
+						checked={todo.completed}
+						onChange={() => this.toggleCompleted.emit(todo) } />
+
+					<label onDblClick={() => this.edit(todo)}>{todo.title}</label>
+					<button class="destroy" onClick={() => this.deleteTodo(todo)}></button>
+				</div>
+				<input class="edit"
+					onBlur={ev => this.doneEdit(todo, ev)}
+					onKeyUp={ev => this.onKeyUp(todo, ev)}
+					value={todo.title} />
+			</li>
+		);
+	}
+
+	render() {
+		return this.todos.length <= 0 ? null : (
+			<section class="main">
+				<input id="toggle-all" class="toggle-all" type="checkbox"
+					onClick={() => this.toggleAll.emit(!this.allCompleted())}
+					checked={this.allCompleted()} />
+
+				<label htmlFor="toggle-all">Mark all as complete</label>
+				<ul class="todo-list">
+					{this.todos.map(todo => this.renderTodo(todo))}
+				</ul>
+			</section>
+		);
+	}
 }
